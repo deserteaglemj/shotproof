@@ -21,7 +21,7 @@ for p in python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do $p -c 'imp
 2. Pick the mode:
    - **HTML** (default): one `index.html` with an inline `<style>`, no build step, no framework, no CDN. Use it unless one of the next two applies.
    - **React + Tailwind**: the user asks for it, or the target project already has React (check `package.json`). Write components into that project, follow its conventions and existing components, and verify against its local dev server URL (127.0.0.1 or localhost only). When the project has its own frontend skill or rules, follow them too.
-   - **Private client proof**: the user says proof, outreach, pitch or prospect (M Studio uses this for prospects), or the screenshot is a real business's site being redone as a pitch. Read `references/private-proof.md` before writing anything; its rules override the rest of this file where they differ.
+   - **Private client proof**: the user says proof, outreach, pitch or prospect, or the screenshot is a real business's site being redone as a pitch. Read `references/private-proof.md` before writing anything; its rules override the rest of this file where they differ.
 3. Output folder: what the user named; otherwise next to the screenshot in a folder named after it. Never write into `~` top level.
 4. Several screenshots: same page at different widths means one responsive page (verify each width); different pages means one file per page sharing one CSS block of tokens; states of one screen (hover, open menu) means one page with those states built in.
 

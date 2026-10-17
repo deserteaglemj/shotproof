@@ -43,9 +43,9 @@ python3 -m pip install playwright pillow numpy && python3 -m playwright install 
 Then:
 
 ```text
-/shotproof ~/Desktop/landing.png
-/shotproof ~/Desktop/app.png react
-/shotproof ~/Desktop/prospect.png proof acme-plumbing
+/shotproof ./landing.png
+/shotproof ./app.png react
+/shotproof ./prospect.png proof example-client
 ```
 
 Or just say "turn this screenshot into code". Codex picks the skill up the same way.
@@ -119,7 +119,7 @@ The two real-site cases (Hacker News, and GOV.UK rebuilt in private proof mode) 
 | Checks its own output | Renders at the screenshot's own size and dpr, scores it (SSIM overall and per band), and fixes the worst band for up to 5 rounds against a fixed pass line | Renders desktop (1280x832) and mobile (342x684) previews for the model to look at; no score, diff or pass line | Only if you ask, and with no score |
 | Fails the check on | Low score, console or request errors, a blank page, a pasted screenshot, sideways scroll at 375px | Nothing automatic | Nothing |
 | Output | HTML + CSS with no CDN or web fonts, or React + Tailwind in your repo | Six stacks (Tailwind, Bootstrap, Vue, Ionic and more), video input, AI image generation | Whatever it decides |
-| Published evals | 7 cases, scored by script, results in the repo | 16-screenshot set (not published), rated by hand, plus pairwise voting | None |
+| Published evals | 7 cases, scored by script, results in the repo | Hand-rated eval set and pairwise voting; set and results not published | None |
 
 abi/screenshot-to-code is a great standalone app: more stacks, video input, real asset extraction and image generation, and a full web UI with variants and select-and-edit. shotproof is for people who already work in an agent and want the result rendered, measured and fixed without leaving it, with no key and no extra cost.
 
@@ -137,6 +137,15 @@ abi/screenshot-to-code is a great standalone app: more stacks, video input, real
 
 Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift detection, palette, every proof rule, the blank, pasted-screenshot and 375px checks, and a real end-to-end render).
 
+## Limitations
+
+- **The score is grayscale SSIM.** It measures how alike the render and the screenshot look, not code quality or accessibility.
+- **Static frame only.** Hover, focus, menus and motion are not in a screenshot, so the agent infers them.
+- **No font identification or asset extraction.** It picks a system font of the same style and crops images out of the screenshot. The serif article case hit the 5-round cap for that reason.
+- **No React + Tailwind eval case yet.** All 7 published cases are HTML mode.
+- **Small eval set:** 7 screens. No hosted UI and no video input.
+- **Needs Python 3 with Playwright, Pillow and numpy, plus Chromium, on your machine** (one-time setup above).
+
 ## FAQ
 
 **Does it send my screenshot anywhere?** Only to the model your agent already uses. The checker runs locally in headless Chromium. Proof mode verifies with the network blocked.
@@ -153,4 +162,4 @@ Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift
 
 The quality rules were inspired by a shared `image-to-code` agent skill, and the prompt and evaluation ideas by [abi/screenshot-to-code](https://github.com/abi/screenshot-to-code) (MIT). No text or code was copied from either. The two public-site cases were captured read-only; only their scores are published here.
 
-Made by Marquis Jackson at M Studio. MIT licensed.
+Made by Marquis Jackson. MIT licensed.

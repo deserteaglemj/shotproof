@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 (2026-10-17)
+
+- Plugin manifests list `homepage` and `repository`; the plugin folder has its own short README.
+- README: Limitations section, relative example paths, softer wording for abi's unpublished eval set.
+- Demo MP4 audio is now sound effects only (CC0); the music bed was dropped because its license was not documented. Social preview cropped to 1280x640.
+
 ## 0.4.0 (2026-10-17)
 
 - `verify` fails a blank render (flat color or no text), a page where one image covers more than a quarter of it (`--max-image-ratio`, so pasting the screenshot cannot win the score), and sideways scroll at 375px wide (`--mobile-width`, writes `render-375.png`).
@@ -24,7 +30,7 @@ Public release.
 
 ## 0.1.0 (2026-10-17)
 
-First release, private.
+First release.
 
 - `screenshot-to-code` skill: intake (dpr, mode), builder-style read of the screenshot (sections, exact text, sampled colors, type, spacing, media), section-by-section build, render-compare-fix loop capped at 5 rounds, honest score report.
 - Modes: single-file HTML (default), React + Tailwind, private client proof (`references/private-proof.md`).
@@ -32,4 +38,4 @@ First release, private.
 - `s2c.py` helper: `render`, `verify` (SSIM, per-band SSIM, pixel match, side-by-side and diff images, console, page and request errors, optional offline mode), `crop`, `palette`, `proof-check`. Uses Python Playwright, Pillow and numpy that were already installed.
 - Unit and end-to-end self-tests (`plugins/screenshot-to-code/tests`).
 - Eval set of 7 cases (5 own pages, 2 public sites) with results in `evals/RESULTS.md`.
-- Local marketplace `quis-screenshot-to-code` for Claude Code and Codex.
+- Marketplace `quis-screenshot-to-code` for Claude Code and Codex (renamed to shotproof in 0.3.0).
