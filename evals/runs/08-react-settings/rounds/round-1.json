@@ -1,0 +1,66 @@
+{
+ "ssim": 0.9991,
+ "band_shift_px": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "pixel_match": 0.9957,
+ "mean_color_delta": 0.13,
+ "band_ssim_top_to_bottom": [
+  1.0,
+  0.9989,
+  0.9984,
+  0.999,
+  0.9988,
+  1.0,
+  0.9986,
+  0.9994
+ ],
+ "size_ref": [
+  1280,
+  900
+ ],
+ "size_candidate": [
+  1280,
+  900
+ ],
+ "candidate_resized": false,
+ "console_errors": [],
+ "page_errors": [],
+ "failed_requests": [],
+ "external_requests": [],
+ "page_stats": {
+  "horizontal_overflow_px": 0,
+  "visible_text_chars": 383,
+  "largest_image_area_ratio": 0,
+  "image_area_ratio_total": 0
+ },
+ "viewport_css": [
+  1280,
+  900
+ ],
+ "dpr": 1.0,
+ "threshold": 0.9,
+ "blank_render": false,
+ "mobile": {
+  "width": 375,
+  "horizontal_overflow_px": 0,
+  "visible_text_chars": 383,
+  "largest_image_area_ratio": 0,
+  "image_area_ratio_total": 0,
+  "errors": []
+ },
+ "failures": [],
+ "passed": true,
+ "worst_bands": [
+  "band 3/8 (y 225-337px)",
+  "band 7/8 (y 675-787px)",
+  "band 5/8 (y 450-562px)"
+ ]
+}

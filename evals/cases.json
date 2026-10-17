@@ -5,5 +5,6 @@
   {"id": "04-mobile-login", "source": "fixtures/src/04-mobile-login.html", "width": 390, "height": 844, "dpr": 2, "kind": "synthetic", "threshold": 0.90},
   {"id": "05-article", "source": "fixtures/src/05-article.html", "width": 1024, "height": 1000, "dpr": 1, "kind": "synthetic", "threshold": 0.90},
   {"id": "06-hacker-news", "source": "https://news.ycombinator.com/", "width": 1280, "height": 900, "dpr": 1, "kind": "public", "threshold": 0.80},
-  {"id": "07-gov-uk", "source": "https://www.gov.uk/", "width": 1280, "height": 900, "dpr": 1, "kind": "public", "threshold": 0.80}
+  {"id": "07-gov-uk", "source": "https://www.gov.uk/", "width": 1280, "height": 900, "dpr": 1, "kind": "public", "threshold": 0.80},
+  {"id": "08-react-settings", "source": "fixtures/src/08-react-settings/", "width": 1280, "height": 900, "dpr": 1, "kind": "react", "threshold": 0.90}
 ]

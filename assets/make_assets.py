@@ -19,6 +19,7 @@ LABELS = {
     "05-article": "Serif article",
     "06-hacker-news": "Hacker News",
     "07-gov-uk": "GOV.UK (proof mode)",
+    "08-react-settings": "Settings, React",
 }
 
 
@@ -42,7 +43,7 @@ def scores_svg(results: list[dict]) -> str:
 </style>
 <rect class="bg" x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="14"/>
 <text class="ink" x="28" y="38" font-size="18" font-weight="650">Every eval screen got closer after the fix loop</text>
-<text class="muted" x="28" y="60" font-size="13">SSIM vs the input screenshot (1.0 = identical). Re-scored independently; 7 of 7 pass.</text>
+<text class="muted" x="28" y="60" font-size="13">SSIM vs the input screenshot (1.0 = identical). Re-scored independently; {sum(r["recheck_passed"] for r in results)} of {len(results)} pass.</text>
 <circle class="first" cx="{right - 250}" cy="34" r="6"/><text class="ink" x="{right - 238}" y="38" font-size="13">First build</text>
 <circle class="final" cx="{right - 150}" cy="34" r="6"/><text class="ink" x="{right - 138}" y="38" font-size="13">After fix loop</text>
 <line class="pass" x1="{right - 250}" y1="56" x2="{right - 250}" y2="68" stroke-width="2" stroke-dasharray="3 2"/><text class="ink" x="{right - 238}" y="66" font-size="13">Pass line</text>''']

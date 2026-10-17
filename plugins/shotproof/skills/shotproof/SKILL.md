@@ -86,7 +86,7 @@ Then:
 2. Fix the worst band first. Typical causes, in order: wrong section height or padding, wrong font size or line-height (text wraps differently and shifts everything below), wrong container width, wrong colors, missing element.
 3. After round 1, change only the code for the band you are fixing, with targeted edits. Never rewrite the whole file: a rewrite re-rolls bands that already matched.
 4. Re-run verify into `round-2`, `round-3`... Keep every round's `verify.json`.
-5. Keep the best round, not the last one. If a round scores lower than the best so far, copy that best round's `page-snapshot.html` back over the page before trying something else. The final page is the highest-scoring round that passed (or the highest-scoring one if none passed); report which round it was.
+5. Keep the best round, not the last one. If a round scores lower than the best so far, copy that best round's `page-snapshot.html` back over the page before trying something else. In React mode `page-snapshot.html` is not your source, so copy the source files you changed into each round folder yourself and restore those. The final page is the highest-scoring round that passed (or the highest-scoring one if none passed); report which round it was.
 6. Stop when `passed` is true and another round would not visibly improve anything, or after **5 rounds**, whichever comes first. Do not tune numbers blindly to chase the score; every change should make the side-by-side look more like the source.
 7. Fix every item in `failures` regardless of score.
 

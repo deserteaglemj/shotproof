@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-5b4ff0"></a>
-  <a href="evals/RESULTS.md"><img alt="Evals: 7 of 7 pass" src="https://img.shields.io/badge/evals-7%2F7%20pass-2f8f62"></a>
+  <a href="evals/RESULTS.md"><img alt="Evals: 8 of 8 pass" src="https://img.shields.io/badge/evals-8%2F8%20pass-2f8f62"></a>
   <a href="https://github.com/deserteaglemj/shotproof/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/deserteaglemj/shotproof/actions/workflows/tests.yml/badge.svg"></a>
   <img alt="Works with Claude Code and Codex" src="https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20Codex-1d1d1b">
 </p>
@@ -84,7 +84,7 @@ Those are the real scores from the mobile-login eval case. The bar is SSIM, a st
 
 <p align="center"><img src="assets/scores.svg" alt="Dumbbell chart: every eval case improved after the fix loop and ended above its pass line" width="100%"></p>
 
-Seven test screens. Five are pages written for the test (so the true answer is known) and two are real public sites captured read-only. Each was rebuilt by a fresh agent that saw only the screenshot and the skill, and every final page was then re-scored by a separate script. All 7 pass; the fix loop added 0.097 SSIM on average. Full numbers, per-round logs and limits: [evals/RESULTS.md](evals/RESULTS.md).
+Eight test screens. Six are pages written for the test (so the true answer is known; one of them is a React + Tailwind app) and two are real public sites captured read-only. Each was rebuilt by a fresh agent that saw only the screenshot and the skill, and every final page was then re-scored by a separate script. All 8 pass; the fix loop added 0.085 SSIM on average (0.097 across the seven HTML cases). The React case scored 0.9996, which mostly shows its source used Tailwind's defaults too. Full numbers, per-round logs and limits: [evals/RESULTS.md](evals/RESULTS.md).
 
 **Left: the input screenshot. Right: what the agent built.**
 
@@ -93,8 +93,9 @@ Seven test screens. Five are pages written for the test (so the true answer is k
 <p align="center"><img src="assets/gallery/01-saas-landing.jpg" alt="Landing page: input vs rebuilt, SSIM 0.976" width="100%"></p>
 
 <details>
-<summary>Two more cases</summary>
+<summary>Three more cases</summary>
 
+<p align="center"><img src="assets/gallery/08-react-settings.jpg" alt="Settings screen built in React + Tailwind: input vs rebuilt, SSIM 0.9996" width="100%"></p>
 <p align="center"><img src="assets/gallery/02-pricing.jpg" alt="Dark pricing table: input vs rebuilt, SSIM 0.951" width="100%"></p>
 <p align="center"><img src="assets/gallery/05-article.jpg" alt="Serif article: input vs rebuilt, SSIM 0.930" width="100%"></p>
 
@@ -119,7 +120,7 @@ The two real-site cases (Hacker News, and GOV.UK rebuilt in private proof mode) 
 | Checks its own output | Renders at the screenshot's own size and dpr, scores it (SSIM overall and per band), and fixes the worst band for up to 5 rounds against a fixed pass line | Renders desktop (1280x832) and mobile (342x684) previews for the model to look at; no score, diff or pass line | Only if you ask, and with no score |
 | Fails the check on | Low score, console or request errors, a blank page, a pasted screenshot, sideways scroll at 375px | Nothing automatic | Nothing |
 | Output | HTML + CSS with no CDN or web fonts, or React + Tailwind in your repo | Six stacks (Tailwind, Bootstrap, Vue, Ionic and more), video input, AI image generation | Whatever it decides |
-| Published evals | 7 cases, scored by script, results in the repo | Hand-rated eval set and pairwise voting; set and results not published | None |
+| Published evals | 8 cases (7 HTML, 1 React), scored by script, results in the repo | Hand-rated eval set and pairwise voting; set and results not published | None |
 
 abi/screenshot-to-code is a great standalone app: more stacks, video input, real asset extraction and image generation, and a full web UI with variants and select-and-edit. shotproof is for people who already work in an agent and want the result rendered, measured and fixed without leaving it, with no key and no extra cost.
 
@@ -142,8 +143,8 @@ Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift
 - **The score is grayscale SSIM.** It measures how alike the render and the screenshot look, not code quality or accessibility.
 - **Static frame only.** Hover, focus, menus and motion are not in a screenshot, so the agent infers them.
 - **No font identification or asset extraction.** It picks a system font of the same style and crops images out of the screenshot. The serif article case hit the 5-round cap for that reason.
-- **No React + Tailwind eval case yet.** All 7 published cases are HTML mode.
-- **Small eval set:** 7 screens. No hosted UI and no video input.
+- **React + Tailwind has one eval case, and an easy one.** Its source also used Tailwind defaults; a design built outside them is untested.
+- **Small eval set:** 8 screens. No hosted UI and no video input.
 - **Needs Python 3 with Playwright, Pillow and numpy, plus Chromium, on your machine** (one-time setup above).
 
 ## FAQ

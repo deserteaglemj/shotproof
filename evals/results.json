@@ -96,5 +96,19 @@
   "failed_requests": 0,
   "external_requests": 0,
   "proof_check_passed": true
+ },
+ {
+  "case": "08-react-settings",
+  "kind": "react",
+  "threshold": 0.9,
+  "round1_ssim": 0.9991,
+  "agent_final_ssim": 0.9996,
+  "rounds": 2,
+  "recheck_ssim": 0.9996,
+  "recheck_passed": true,
+  "console_errors": 0,
+  "failed_requests": 0,
+  "external_requests": 0,
+  "proof_check_passed": null
  }
 ]

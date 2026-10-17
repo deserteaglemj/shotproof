@@ -35,7 +35,7 @@
   <rect width="168" height="36" rx="18" fill="#1f1c3d" stroke="#3a3570"/>
   <text x="84" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle" class="mono">/shotproof</text>
   <rect x="180" width="150" height="36" rx="18" fill="#1f1c3d" stroke="#3a3570"/>
-  <text x="255" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle">7 of 7 evals pass</text>
+  <text x="255" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle">8 of 8 evals pass</text>
 </g>
 
 <!-- screenshot card -->

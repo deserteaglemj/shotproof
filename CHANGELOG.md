@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2 (2026-10-17)
+
+- Eval case 08: a React + Tailwind settings screen (own Vite app, known source). Built blind in React mode against the dev server, re-scored from a production build: 0.9991 to 0.9996, pass. 8 of 8 cases pass.
+- `collect.py` re-checks React cases (builds the agent's app and serves it on 127.0.0.1) and can re-collect named cases only.
+- Skill: in React mode, keep a copy of the changed source files per round, since `page-snapshot.html` cannot restore JSX.
+
 ## 0.4.1 (2026-10-17)
 
 - Plugin manifests list `homepage` and `repository`; the plugin folder has its own short README.
