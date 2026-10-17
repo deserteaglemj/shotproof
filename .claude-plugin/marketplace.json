@@ -10,7 +10,7 @@
     {
       "name": "shotproof",
       "source": "./plugins/shotproof",
-      "description": "Turn screenshots into matching HTML + CSS or React + Tailwind, verified by render-and-compare."
+      "description": "Screenshot to code for Claude Code and Codex: screenshot to HTML/CSS or React + Tailwind with no API key, rendered, scored (SSIM) and fixed until it matches."
     }
   ]
 }

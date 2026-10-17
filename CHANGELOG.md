@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.3 (2026-10-17)
+
+- Discoverability: README opens with what it is (screenshot to code for Claude Code and Codex, no API key) and adds a six-question FAQ.
+- New root `llms.txt` and `AGENTS.md` for agents and language-model crawlers.
+- GitHub Pages landing page in `docs/` with Open Graph tags, JSON-LD (SoftwareApplication and FAQPage), `robots.txt` and `sitemap.xml`.
+- Skill and plugin descriptions list more trigger phrases ("convert this image to HTML", "recreate this UI", "match this design", "Figma export screenshot").
+- Draft directory listings in `docs/launch/LISTINGS.md` (not submitted).
+
 ## 0.4.2 (2026-10-17)
 
 - Eval case 08: a React + Tailwind settings screen (own Vite app, known source). Built blind in React mode against the dev server, re-scored from a production build: 0.9991 to 0.9996, pass. 8 of 8 cases pass.

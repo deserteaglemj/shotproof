@@ -1,0 +1,39 @@
+# shotproof
+
+> Screenshot to code plugin for Claude Code and Codex. Turns a screenshot into matching HTML + CSS (or React + Tailwind) with no API key, using the agent's own model, then renders it in Chromium, scores it against the screenshot with SSIM and fixes it until it passes. MIT licensed.
+
+Install in Claude Code:
+
+```
+/plugin marketplace add deserteaglemj/shotproof
+/plugin install shotproof@shotproof
+```
+
+Install in Codex:
+
+```
+codex plugin marketplace add deserteaglemj/shotproof
+codex plugin add shotproof@shotproof
+```
+
+One-time helper setup: `python3 -m pip install playwright pillow numpy && python3 -m playwright install chromium`
+
+Use: `/shotproof ./screenshot.png`, `/shotproof ./app.png react`, or ask "turn this screenshot into code".
+
+## Docs
+
+- [README](https://github.com/deserteaglemj/shotproof/blob/main/README.md): what it does, install, modes, comparison with abi/screenshot-to-code, limitations, FAQ
+- [SKILL.md](https://github.com/deserteaglemj/shotproof/blob/main/plugins/shotproof/skills/shotproof/SKILL.md): the full workflow the agent follows (intake, read, build, verify and fix loop, report)
+- [Private client proof rules](https://github.com/deserteaglemj/shotproof/blob/main/plugins/shotproof/skills/shotproof/references/private-proof.md)
+- [Eval results](https://github.com/deserteaglemj/shotproof/blob/main/evals/RESULTS.md): 8 cases, all pass, independently re-scored
+
+## CLI reference
+
+- [s2c.py helper commands](https://github.com/deserteaglemj/shotproof/blob/main/README.md#the-helper-script): `verify`, `render`, `palette`, `crop`, `proof-check`
+- [s2c.py source](https://github.com/deserteaglemj/shotproof/blob/main/plugins/shotproof/skills/shotproof/scripts/s2c.py)
+
+## Optional
+
+- [Agent guide](https://github.com/deserteaglemj/shotproof/blob/main/AGENTS.md)
+- [Changelog](https://github.com/deserteaglemj/shotproof/blob/main/CHANGELOG.md)
+- [Landing page](https://deserteaglemj.github.io/shotproof/)

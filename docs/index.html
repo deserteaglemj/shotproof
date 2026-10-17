@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shotproof: screenshot to code for Claude Code and Codex, no API key</title>
+<meta name="description" content="Turn a screenshot into matching HTML/CSS (or React + Tailwind) with Claude Code or Codex. No API key: uses your agent's own model, then renders, scores (SSIM) and fixes until it matches. MIT.">
+<link rel="canonical" href="https://deserteaglemj.github.io/shotproof/">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="shotproof">
+<meta property="og:title" content="shotproof: screenshot to code for Claude Code and Codex, no API key">
+<meta property="og:description" content="Turn a screenshot into matching HTML/CSS or React + Tailwind with your agent's own model, then render, score (SSIM) and fix until it matches. 8 of 8 evals pass.">
+<meta property="og:url" content="https://deserteaglemj.github.io/shotproof/">
+<meta property="og:image" content="https://deserteaglemj.github.io/shotproof/img/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="Scoreboard: 8 of 8 eval screens pass, mean gain from the fix loop +0.085 SSIM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="shotproof: screenshot to code for Claude Code and Codex">
+<meta name="twitter:description" content="Screenshot to HTML/CSS or React + Tailwind with no API key, rendered, scored with SSIM and fixed until it matches.">
+<meta name="twitter:image" content="https://deserteaglemj.github.io/shotproof/img/social-preview.png">
+<meta name="color-scheme" content="light dark">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["SoftwareSourceCode", "SoftwareApplication"],
+      "name": "shotproof",
+      "description": "Screenshot to code plugin for Claude Code and Codex. Turns a screenshot into matching HTML/CSS or React + Tailwind with no API key, using the agent's own model, then renders, scores (SSIM) and fixes until it matches.",
+      "url": "https://deserteaglemj.github.io/shotproof/",
+      "codeRepository": "https://github.com/deserteaglemj/shotproof",
+      "programmingLanguage": ["Python", "HTML", "CSS", "JavaScript"],
+      "runtimePlatform": ["Claude Code", "Codex"],
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Linux, Windows",
+      "license": "https://opensource.org/licenses/MIT",
+      "softwareVersion": "0.4.3",
+      "author": {"@type": "Person", "name": "Marquis Jackson"},
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "keywords": "screenshot to code, screenshot to HTML, image to code, design to code, Claude Code plugin, Codex plugin, agent skills, no API key, SSIM, visual regression"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "How do I convert a screenshot to HTML with Claude Code?", "acceptedAnswer": {"@type": "Answer", "text": "Install shotproof (/plugin marketplace add deserteaglemj/shotproof, then /plugin install shotproof@shotproof) and run /shotproof ./screenshot.png, or just say \"turn this screenshot into code\". Claude Code writes one index.html, renders it, scores it against your screenshot and fixes it until it passes."}},
+        {"@type": "Question", "name": "Is there a screenshot-to-code tool that needs no OpenAI key?", "acceptedAnswer": {"@type": "Answer", "text": "Yes: shotproof runs on the model your Claude Code or Codex session already uses, so it needs no OpenAI, Anthropic or Gemini API key. The render and scoring run locally with Python, Playwright and Chromium."}},
+        {"@type": "Question", "name": "How is this different from abi/screenshot-to-code?", "acceptedAnswer": {"@type": "Answer", "text": "abi/screenshot-to-code is a standalone web app that needs a provider API key and supports more stacks and video input. shotproof runs inside your agent with no key, and checks its own output with a measured SSIM score and a fixed pass line, fixing the worst band for up to 5 rounds."}},
+        {"@type": "Question", "name": "Does it work in Codex?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Run codex plugin marketplace add deserteaglemj/shotproof and codex plugin add shotproof@shotproof; Codex picks up the same skill and helper script."}},
+        {"@type": "Question", "name": "How do I check the generated page matches the design?", "acceptedAnswer": {"@type": "Answer", "text": "s2c.py verify renders the page at the screenshot's size and writes an SSIM score, a score for each of 8 horizontal bands, a side-by-side image and a red diff heatmap. It passes at 0.90 SSIM (0.80 for real sites) and fails on console errors, failed requests, a blank page, a pasted screenshot or sideways scroll at 375px."}},
+        {"@type": "Question", "name": "Can it output React + Tailwind?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Ask for React, or use it in a project that already has React; it writes components into your project and verifies them against your local dev server. One eval case covers this mode (0.9996 SSIM, an easy case because its source also used Tailwind defaults)."}}
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root {
+    --bg: #fcfcfb; --surface: #ffffff; --line: #e6e4df; --ink: #1d1d1b; --muted: #5f5e5a;
+    --accent: #4b3fe0; --accent-soft: #f1efff; --code-bg: #f4f3f0; --pass: #1f7a4f;
+    --radius: 12px; --max: 68rem;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a19; --surface: #222220; --line: #3d3c37; --ink: #f2f1ec; --muted: #b3b1aa;
+      --accent: #a39bff; --accent-soft: #2a2654; --code-bg: #262624; --pass: #5fd39a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--font); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible, pre:focus-visible, .table-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--bg); padding: 10px 14px; z-index: 10; }
+  .skip:focus { left: 16px; top: 16px; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+  header.site { border-bottom: 1px solid var(--line); }
+  header.site .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; min-height: 60px; gap: 0 16px; }
+  .brand { font-weight: 700; font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+  .brand span { color: var(--accent); }
+  nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; }
+  @media (max-width: 420px) { nav { width: 100%; } nav ul { justify-content: space-between; } }
+  nav a { color: var(--muted); text-decoration: none; display: inline-block; padding: 10px 0; }
+  nav a:hover { color: var(--ink); }
+  .hero { padding: 56px 0 40px; }
+  h1 { font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.12; margin: 0 0 18px; letter-spacing: -0.02em; max-width: 22ch; }
+  .lede { font-size: 1.18rem; color: var(--muted); max-width: 62ch; margin: 0 0 28px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+  .btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 10px; font-weight: 600; text-decoration: none; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  @media (prefers-color-scheme: dark) { .btn.primary { color: #14122b; } }
+  .btn.ghost { border: 1px solid var(--line); color: var(--ink); background: var(--surface); }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 0; margin: 22px 0 0; list-style: none; color: var(--muted); font-size: 0.95rem; }
+  .facts b { color: var(--ink); }
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 1.6rem; margin: 0 0 18px; letter-spacing: -0.01em; }
+  h3 { font-size: 1.05rem; margin: 0 0 6px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 20px; }
+  .results-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 760px) { .results-grid { grid-template-columns: 1fr; } .results-grid figure:last-child { max-width: 24rem; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 8px 0 0; font: 0.92rem/1.55 var(--mono); }
+  code { font-family: var(--mono); font-size: 0.92em; }
+  ol.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 10px; max-width: 70ch; }
+  ol.steps li::marker { color: var(--accent); font-weight: 700; }
+  figure { margin: 0; }
+  figure img { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); background: #fff; }
+  figcaption { color: var(--muted); font-size: 0.92rem; margin-top: 8px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  table { border-collapse: collapse; width: 100%; min-width: 34rem; background: var(--surface); }
+  caption { text-align: left; padding: 12px 14px; color: var(--muted); font-size: 0.95rem; }
+  th, td { text-align: left; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 0.95rem; }
+  th { font-weight: 600; }
+  td.num { font-family: var(--mono); }
+  td.ok { color: var(--pass); font-weight: 600; }
+  details { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin-bottom: 10px; }
+  summary { cursor: pointer; padding: 14px 16px; font-weight: 600; min-height: 44px; }
+  details p { margin: 0; padding: 0 16px 16px; color: var(--muted); max-width: 72ch; }
+  ul.limits { margin: 0; padding-left: 1.2rem; display: grid; gap: 6px; max-width: 72ch; color: var(--muted); }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--muted); font-size: 0.95rem; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="./">shot<span>proof</span></a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="https://github.com/deserteaglemj/shotproof">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap hero">
+    <h1>Screenshot to code for Claude Code and Codex, with no API key</h1>
+    <p class="lede"><strong>shotproof turns a screenshot into matching HTML + CSS (or React + Tailwind) using your agent's own model.</strong> It renders the page in Chromium at the screenshot's exact size, scores it against your image with SSIM, and fixes the worst-matching part until the score passes.</p>
+    <div class="cta">
+      <a class="btn primary" href="#install">Install in 30 seconds</a>
+      <a class="btn ghost" href="https://github.com/deserteaglemj/shotproof">View on GitHub</a>
+    </div>
+    <ul class="facts">
+      <li><b>8 of 8</b> eval screens pass</li>
+      <li>Pass line <b>0.90 SSIM</b>, set before the evals</li>
+      <li><b>MIT</b> licensed</li>
+    </ul>
+  </div>
+
+  <section id="install" aria-labelledby="install-h">
+    <div class="wrap">
+      <h2 id="install-h">Install</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>Claude Code</h3>
+          <pre tabindex="0"><code>/plugin marketplace add deserteaglemj/shotproof
+/plugin install shotproof@shotproof</code></pre>
+        </div>
+        <div class="card">
+          <h3>Codex</h3>
+          <pre tabindex="0"><code>codex plugin marketplace add deserteaglemj/shotproof
+codex plugin add shotproof@shotproof</code></pre>
+        </div>
+      </div>
+      <p>One-time helper setup (Python 3):</p>
+      <pre tabindex="0"><code>python3 -m pip install playwright pillow numpy &amp;&amp; python3 -m playwright install chromium</code></pre>
+      <p>Then run <code>/shotproof ./screenshot.png</code>, add <code>react</code> for React + Tailwind, or just say "turn this screenshot into code".</p>
+    </div>
+  </section>
+
+  <section id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <h2 id="how-h">How it works</h2>
+      <ol class="steps">
+        <li><strong>Read the screenshot like a builder:</strong> sections, exact text, colors sampled from real pixels, type sizes and spacing.</li>
+        <li><strong>Build</strong> one HTML file with inline CSS (no CDN, no web fonts), or React components with Tailwind in your project.</li>
+        <li><strong>Render</strong> it in Chromium at the screenshot's own viewport and device scale.</li>
+        <li><strong>Compare:</strong> SSIM overall and for 8 horizontal bands, band shift in pixels, a side-by-side image and a diff heatmap.</li>
+        <li><strong>Fix the worst band</strong> with targeted edits, keep the best round, and stop at the pass line or after 5 rounds. Console errors, failed requests, a blank page, a pasted screenshot or sideways scroll at 375px fail the check whatever the score.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="results" aria-labelledby="results-h">
+    <div class="wrap">
+      <h2 id="results-h">Results</h2>
+      <p>Each case was rebuilt by a fresh agent that saw only the screenshot, then re-scored by a separate script. Mean gain from the fix loop: +0.085 SSIM. <a href="https://github.com/deserteaglemj/shotproof/blob/main/evals/RESULTS.md">Full results and per-round logs</a>.</p>
+      <div class="results-grid">
+        <figure>
+          <img src="img/03-dashboard.jpg" width="1400" height="435" alt="Orders dashboard: input screenshot on the left, rebuilt page on the right, SSIM 0.980" decoding="async">
+          <figcaption>Dashboard: input (left) and rebuilt (right), SSIM 0.980.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/04-mobile-login.jpg" width="1307" height="1400" alt="Mobile login screen: input screenshot on the left, rebuilt page on the right, SSIM 0.983" decoding="async">
+          <figcaption>Mobile login at 2x: input (left) and rebuilt (right), SSIM 0.983.</figcaption>
+        </figure>
+      </div>
+      <div class="table-wrap" style="margin-top:20px" tabindex="0" role="region" aria-label="Eval scores table">
+        <table>
+          <caption>Eval scores (SSIM vs the input screenshot)</caption>
+          <thead><tr><th scope="col">Case</th><th scope="col">First build</th><th scope="col">Final</th><th scope="col">Pass line</th><th scope="col">Result</th></tr></thead>
+          <tbody>
+            <tr><td>Landing page</td><td class="num">0.948</td><td class="num">0.976</td><td class="num">0.90</td><td class="ok">Pass</td></tr>
+            <tr><td>Pricing (dark)</td><td class="num">0.848</td><td class="num">0.951</td><td class="num">0.90</td><td class="ok">Pass</td></tr>
+            <tr><td>Dashboard</td><td class="num">0.937</td><td class="num">0.980</td><td class="num">0.90</td><td class="ok">Pass</td></tr>
+            <tr><td>Mobile login, 2x</td><td class="num">0.824</td><td class="num">0.983</td><td class="num">0.90</td><td class="ok">Pass</td></tr>
+            <tr><td>Serif article</td><td class="num">0.833</td><td class="num">0.930</td><td class="num">0.90</td><td class="ok">Pass</td></tr>
+            <tr><td>Hacker News (real site)</td><td class="num">0.780</td><td class="num">0.865</td><td class="num">0.80</td><td class="ok">Pass</td></tr>
+            <tr><td>GOV.UK, proof mode (real site)</td><td class="num">0.724</td><td class="num">0.886</td><td class="num">0.80</td><td class="ok">Pass</td></tr>
+            <tr><td>Settings, React + Tailwind</td><td class="num">0.9991</td><td class="num">0.9996</td><td class="num">0.90</td><td class="ok">Pass</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <h2 id="faq-h">FAQ</h2>
+      <details open>
+        <summary>How do I convert a screenshot to HTML with Claude Code?</summary>
+        <p>Install shotproof (<code>/plugin marketplace add deserteaglemj/shotproof</code>, then <code>/plugin install shotproof@shotproof</code>) and run <code>/shotproof ./screenshot.png</code>, or just say "turn this screenshot into code". Claude Code writes one <code>index.html</code>, renders it, scores it against your screenshot and fixes it until it passes.</p>
+      </details>
+      <details>
+        <summary>Is there a screenshot-to-code tool that needs no OpenAI key?</summary>
+        <p>Yes: shotproof runs on the model your Claude Code or Codex session already uses, so it needs no OpenAI, Anthropic or Gemini API key. The render and scoring run locally with Python, Playwright and Chromium.</p>
+      </details>
+      <details>
+        <summary>How is this different from abi/screenshot-to-code?</summary>
+        <p>abi/screenshot-to-code is a standalone web app that needs a provider API key and supports more stacks and video input. shotproof runs inside your agent with no key, and checks its own output with a measured SSIM score and a fixed pass line, fixing the worst band for up to 5 rounds.</p>
+      </details>
+      <details>
+        <summary>Does it work in Codex?</summary>
+        <p>Yes. Run <code>codex plugin marketplace add deserteaglemj/shotproof</code> and <code>codex plugin add shotproof@shotproof</code>; Codex picks up the same skill and helper script.</p>
+      </details>
+      <details>
+        <summary>How do I check the generated page matches the design?</summary>
+        <p><code>s2c.py verify</code> renders the page at the screenshot's size and writes an SSIM score, a score for each of 8 horizontal bands, a side-by-side image and a red diff heatmap. It passes at 0.90 SSIM (0.80 for real sites) and fails on console errors, failed requests, a blank page, a pasted screenshot or sideways scroll at 375px.</p>
+      </details>
+      <details>
+        <summary>Can it output React + Tailwind?</summary>
+        <p>Yes. Ask for React, or use it in a project that already has React; it writes components into your project and verifies them against your local dev server. One eval case covers this mode (0.9996 SSIM, an easy case because its source also used Tailwind defaults).</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="limits" aria-labelledby="limits-h">
+    <div class="wrap">
+      <h2 id="limits-h">Limitations</h2>
+      <ul class="limits">
+        <li>The score is grayscale SSIM: it measures visual match, not code quality or accessibility.</li>
+        <li>Static frame only: hover, focus, menus and motion are inferred.</li>
+        <li>No font identification or asset extraction; it uses a system font of the same style and crops images from the screenshot.</li>
+        <li>Small eval set (8 screens) with one React + Tailwind case.</li>
+        <li>Needs Python 3 with Playwright, Pillow and numpy, plus Chromium, on your machine.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>shotproof is MIT licensed, by Marquis Jackson. Source, issues and docs: <a href="https://github.com/deserteaglemj/shotproof">github.com/deserteaglemj/shotproof</a>. Ideas were inspired by <a href="https://github.com/abi/screenshot-to-code">abi/screenshot-to-code</a>; no text or code was copied.</p>
+  </div>
+</footer>
+</body>
+</html>

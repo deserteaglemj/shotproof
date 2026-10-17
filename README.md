@@ -9,9 +9,9 @@
   <img alt="Works with Claude Code and Codex" src="https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20Codex-1d1d1b">
 </p>
 
-Drop in a screenshot of any website or app screen. Your agent rebuilds it as one clean HTML + CSS file (or React + Tailwind), opens the result in Chromium at the screenshot's exact size, scores it against your image, and fixes the worst-matching part. It repeats until the score passes, then tells you the number and what it could not match.
+**shotproof is a screenshot to code plugin for Claude Code and Codex: it turns a screenshot into matching HTML + CSS (or React + Tailwind) with no API key, using your agent's own model.** It then renders the page in Chromium at the screenshot's exact size, scores it against your image (SSIM) and fixes the worst-matching part until the score passes.
 
-It runs on the model you already use in Claude Code or Codex. There is nothing else to sign up for and no API key to paste.
+You get one clean screenshot-to-HTML file, the score, and a plain list of what it could not match. There is nothing else to sign up for and no OpenAI, Anthropic or Gemini key to paste.
 
 <p align="center">
   <img src="assets/demo.gif" alt="20-second demo: screenshot in, code out, scored and fixed until it passes" width="100%">
@@ -148,6 +148,18 @@ Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift
 - **Needs Python 3 with Playwright, Pillow and numpy, plus Chromium, on your machine** (one-time setup above).
 
 ## FAQ
+
+**How do I convert a screenshot to HTML with Claude Code?** Install shotproof (`/plugin marketplace add deserteaglemj/shotproof`, then `/plugin install shotproof@shotproof`) and run `/shotproof ./screenshot.png`, or just say "turn this screenshot into code". Claude Code writes one `index.html`, renders it, scores it against your screenshot and fixes it until it passes.
+
+**Is there a screenshot-to-code tool that needs no OpenAI key?** Yes: shotproof runs on the model your Claude Code or Codex session already uses, so it needs no OpenAI, Anthropic or Gemini API key. The render and scoring run locally with Python, Playwright and Chromium.
+
+**How is this different from abi/screenshot-to-code?** abi/screenshot-to-code is a standalone web app that needs a provider API key and supports more stacks and video input. shotproof runs inside your agent with no key, and checks its own output with a measured SSIM score and a fixed pass line, fixing the worst band for up to 5 rounds.
+
+**Does it work in Codex?** Yes. Run `codex plugin marketplace add deserteaglemj/shotproof` and `codex plugin add shotproof@shotproof`; Codex picks up the same skill and helper script.
+
+**How do I check the generated page matches the design?** `s2c.py verify` renders the page at the screenshot's size and writes an SSIM score, a score for each of 8 horizontal bands, a side-by-side image and a red diff heatmap. It passes at 0.90 SSIM (0.80 for real sites) and fails on console errors, failed requests, a blank page, a pasted screenshot or sideways scroll at 375px.
+
+**Can it output React + Tailwind?** Yes. Ask for React, or use it in a project that already has React; it writes components into your project and verifies them against your local dev server. One eval case covers this mode (0.9996 SSIM, an easy case because its source also used Tailwind defaults; see [evals/RESULTS.md](evals/RESULTS.md)).
 
 **Does it send my screenshot anywhere?** Only to the model your agent already uses. The checker runs locally in headless Chromium. Proof mode verifies with the network blocked.
 

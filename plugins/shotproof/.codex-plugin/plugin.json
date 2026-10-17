@@ -1,7 +1,7 @@
 {
   "name": "shotproof",
-  "version": "0.4.2",
-  "description": "Turn screenshots of websites or app screens into faithful HTML + CSS (or React + Tailwind), then render, compare and fix until it matches. Uses the running agent's own vision; includes a locked-down private client-proof mode.",
+  "version": "0.4.3",
+  "description": "Screenshot to code for Claude Code and Codex: turn a screenshot into matching HTML + CSS or React + Tailwind with no API key, using the agent's own model, then render, score (SSIM) and fix until it matches. Convert an image to HTML, recreate a UI, clone a landing page or match a design; includes a locked-down private client-proof mode.",
   "author": {
     "name": "Marquis Jackson"
   },
@@ -10,7 +10,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "shotproof",
-    "shortDescription": "Rebuild a screen from a screenshot and verify it visually",
+    "shortDescription": "Screenshot to HTML or React + Tailwind, scored and fixed until it matches",
     "category": "Coding",
     "defaultPrompt": [
       "Turn this screenshot into a single HTML file and verify it matches."
