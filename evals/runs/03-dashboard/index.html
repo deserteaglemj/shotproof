@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orders · Northwind</title>
+<style>
+  :root {
+    --bg: #f4f5f8;
+    --surface: #ffffff;
+    --border: #e4e6ec;
+    --row-border: #eef0f4;
+    --thead: #fafbfc;
+    --ink: #1f2430;
+    --nav: #596075;
+    --muted: #7a8094;
+    --placeholder: #9aa0b0;
+    --accent: #3448d6;
+    --accent-bg: #eef1ff;
+    --green: #18925a;
+    --green-bg: #e3f6ec;
+    --amber: #a86b00;
+    --amber-bg: #fff4dc;
+    --red: #d2453b;
+    --red-ink: #c23a31;
+    --red-bg: #fde8e6;
+    /* likely Helvetica Neue / Arial class */
+    --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: var(--font);
+    color: var(--ink);
+    background: var(--bg);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+  .sidebar {
+    width: 232px;
+    flex: none;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+  }
+  .brand {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+    padding-left: 10px;
+    margin-bottom: 25px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .sidebar ul { list-style: none; margin: 0; padding: 0; }
+  .sidebar a.item {
+    display: block;
+    height: 37px;
+    line-height: 37px;
+    margin-bottom: 1px;
+    padding: 0 12px;
+    border-radius: 8px;
+    color: var(--nav);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .sidebar a.item:hover { background: var(--bg); }
+  .sidebar a.item[aria-current="page"] {
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  main { flex: 1; min-width: 0; padding: 28px 36px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  h1 { margin: 0; font-size: 26px; line-height: 38px; font-weight: 700; }
+  .search {
+    width: 280px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    padding: 0 14px;
+    font: 14px var(--font);
+    color: var(--ink);
+  }
+  .search::placeholder { color: var(--placeholder); }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 17px 20px 16px;
+  }
+  .card .label { margin: 0; font-size: 13px; line-height: 18px; color: var(--muted); }
+  .card .value { margin: 4px 0 6px; font-size: 28px; line-height: 34px; font-weight: 700; }
+  .card .delta { margin: 0; font-size: 13px; line-height: 18px; font-weight: 700; }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+
+  .table-wrap { background: var(--surface); border-radius: 10px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 0 16px; white-space: nowrap; }
+  thead th {
+    background: var(--thead);
+    height: 40px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 2px;
+  }
+  tbody td { height: 43px; font-size: 14px; border-bottom: 1px solid var(--row-border); }
+  tbody tr:last-child td { border-bottom: 0; }
+  th:nth-child(1) { width: 200px; }
+  th:nth-child(2) { width: 285px; }
+  th:nth-child(3) { width: 187px; }
+  th:nth-child(4) { width: 272px; }
+  .badge {
+    display: inline-block;
+    padding: 0 8px;
+    line-height: 20px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .paid { background: var(--green-bg); color: var(--green); }
+  .pending { background: var(--amber-bg); color: var(--amber); }
+  .refunded { background: var(--red-bg); color: var(--red-ink); }
+
+  @media (max-width: 768px) {
+    body { flex-direction: column; }
+    .sidebar { width: auto; border-right: 0; border-bottom: 1px solid var(--border); padding: 16px; }
+    .sidebar ul { display: flex; flex-wrap: wrap; gap: 4px; }
+    .brand { margin-bottom: 12px; }
+    main { padding: 20px 16px; }
+    .top { flex-wrap: wrap; }
+    .search { width: 100%; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#">Northwind</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a class="item" href="#">Overview</a></li>
+        <li><a class="item" href="#" aria-current="page">Orders</a></li>
+        <li><a class="item" href="#">Customers</a></li>
+        <li><a class="item" href="#">Products</a></li>
+        <li><a class="item" href="#">Reports</a></li>
+        <li><a class="item" href="#">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main>
+    <header class="top">
+      <h1>Orders</h1>
+      <input class="search" type="search" placeholder="Search orders" aria-label="Search orders">
+    </header>
+    <section class="stats" aria-label="Summary">
+      <div class="card"><p class="label">Total orders</p><p class="value">1,284</p><p class="delta up">+8.2% this week</p></div>
+      <div class="card"><p class="label">Revenue</p><p class="value">48.2k</p><p class="delta up">+3.1% this week</p></div>
+      <div class="card"><p class="label">Refunds</p><p class="value">23</p><p class="delta down">+2 this week</p></div>
+      <div class="card"><p class="label">Avg. fulfilment</p><p class="value">1.8 d</p><p class="delta up">-0.3 d this week</p></div>
+    </section>
+    <section class="table-wrap" aria-label="Orders">
+      <table>
+        <thead><tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col">Total</th></tr></thead>
+        <tbody>
+          <tr><td>#10421</td><td>Ana Ruiz</td><td>Oct 14</td><td><span class="badge paid">Paid</span></td><td>128.00</td></tr>
+          <tr><td>#10420</td><td>Ben Okafor</td><td>Oct 14</td><td><span class="badge pending">Pending</span></td><td>64.50</td></tr>
+          <tr><td>#10419</td><td>Chloe Lin</td><td>Oct 13</td><td><span class="badge paid">Paid</span></td><td>212.90</td></tr>
+          <tr><td>#10418</td><td>Dev Patel</td><td>Oct 13</td><td><span class="badge refunded">Refunded</span></td><td>39.00</td></tr>
+          <tr><td>#10417</td><td>Emma Stone</td><td>Oct 12</td><td><span class="badge paid">Paid</span></td><td>87.25</td></tr>
+          <tr><td>#10416</td><td>Femi Ade</td><td>Oct 12</td><td><span class="badge pending">Pending</span></td><td>150.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

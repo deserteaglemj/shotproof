@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="1280" height="420" role="img" aria-labelledby="t d">
+<title id="t">screenshot-to-code</title>
+<desc id="d">A screenshot becomes code, the code is rendered and scored against the screenshot, and the result passes at SSIM 0.983.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#14122b"/><stop offset="1" stop-color="#0b0f1c"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="0.78" cy="0.35" r="0.55">
+    <stop offset="0" stop-color="#5b4ff0" stop-opacity="0.35"/><stop offset="1" stop-color="#5b4ff0" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="scan" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#8a80ff" stop-opacity="0"/><stop offset="1" stop-color="#8a80ff" stop-opacity="0.55"/>
+  </linearGradient>
+  <clipPath id="shotClip"><rect x="640" y="92" width="250" height="236" rx="10"/></clipPath>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a80ff"/></marker>
+</defs>
+<style>
+  text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .scan{animation:scan 3.2s ease-in-out infinite}
+  @keyframes scan{0%{transform:translateY(0)}50%{transform:translateY(200px)}100%{transform:translateY(0)}}
+  .badge{animation:pulse 3.2s ease-in-out infinite;transform-origin:1080px 292px}
+  @keyframes pulse{0%,60%,100%{transform:scale(1)}70%{transform:scale(1.035)}}
+  @media (prefers-reduced-motion: reduce){.scan,.badge{animation:none}}
+</style>
+<rect width="1280" height="420" rx="22" fill="url(#bg)"/>
+<rect width="1280" height="420" rx="22" fill="url(#glow)"/>
+
+<!-- copy -->
+<text x="64" y="132" font-size="15" font-weight="600" fill="#8a80ff" letter-spacing="2.5">CLAUDE CODE + CODEX PLUGIN</text>
+<text x="62" y="196" font-size="54" font-weight="800" fill="#f4f3ff" letter-spacing="-1.5">screenshot-to-code</text>
+<text x="64" y="244" font-size="24" fill="#c9c6e8">Turns a screenshot into code,</text>
+<text x="64" y="276" font-size="24" fill="#c9c6e8">then proves it matches.</text>
+<g transform="translate(64 314)">
+  <rect width="168" height="36" rx="18" fill="#1f1c3d" stroke="#3a3570"/>
+  <text x="84" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle" class="mono">/screenshot-to-code</text>
+  <rect x="180" width="150" height="36" rx="18" fill="#1f1c3d" stroke="#3a3570"/>
+  <text x="255" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle">7 of 7 evals pass</text>
+</g>
+
+<!-- screenshot card -->
+<g>
+  <rect x="640" y="92" width="250" height="236" rx="10" fill="#f6f5f1"/>
+  <g clip-path="url(#shotClip)">
+    <rect x="640" y="92" width="250" height="26" fill="#ebe8e1"/>
+    <circle cx="656" cy="105" r="4" fill="#d9d4ca"/><circle cx="670" cy="105" r="4" fill="#d9d4ca"/><circle cx="684" cy="105" r="4" fill="#d9d4ca"/>
+    <rect x="664" y="138" width="54" height="10" rx="3" fill="#2f6b4f"/>
+    <rect x="806" y="136" width="62" height="14" rx="4" fill="#1d2433"/>
+    <rect x="690" y="172" width="150" height="14" rx="3" fill="#1d2433"/>
+    <rect x="706" y="192" width="118" height="14" rx="3" fill="#1d2433"/>
+    <rect x="702" y="216" width="126" height="6" rx="3" fill="#a9adb6"/>
+    <rect x="716" y="228" width="98" height="6" rx="3" fill="#a9adb6"/>
+    <rect x="700" y="248" width="62" height="20" rx="5" fill="#2f6b4f"/>
+    <rect x="770" y="248" width="62" height="20" rx="5" fill="none" stroke="#cfc9bd" stroke-width="1.5"/>
+    <rect x="662" y="288" width="58" height="26" rx="5" fill="#e3efe8"/><rect x="736" y="288" width="58" height="26" rx="5" fill="#e3efe8"/><rect x="810" y="288" width="58" height="26" rx="5" fill="#e3efe8"/>
+    <rect class="scan" x="640" y="92" width="250" height="34" fill="url(#scan)"/>
+  </g>
+  <text x="765" y="352" font-size="13" fill="#9b98bd" text-anchor="middle" class="mono">shot.png</text>
+</g>
+
+<line x1="902" y1="210" x2="934" y2="210" stroke="#8a80ff" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+<!-- code card -->
+<g>
+  <rect x="944" y="92" width="272" height="148" rx="10" fill="#17152f" stroke="#3a3570"/>
+  <text class="mono" x="962" y="122" font-size="12.5" fill="#8a80ff">&lt;section class="hero"&gt;</text>
+  <text class="mono" x="976" y="142" font-size="12.5" fill="#e6e3ff">&lt;h1&gt;Research notes that</text>
+  <text class="mono" x="976" y="162" font-size="12.5" fill="#e6e3ff">organize themselves&lt;/h1&gt;</text>
+  <text class="mono" x="976" y="182" font-size="12.5" fill="#9b98bd">--green: #2f6b4f;</text>
+  <text class="mono" x="976" y="202" font-size="12.5" fill="#9b98bd">font-size: 60px;</text>
+  <text class="mono" x="962" y="222" font-size="12.5" fill="#8a80ff">&lt;/section&gt;</text>
+</g>
+
+<!-- verified badge -->
+<g class="badge">
+  <rect x="944" y="256" width="272" height="72" rx="12" fill="#13261d" stroke="#2f8f62"/>
+  <circle cx="980" cy="292" r="16" fill="#2f8f62"/>
+  <path d="M972 292l6 6 11-12" fill="none" stroke="#f4fff9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1008" y="286" font-size="13" fill="#9fd9bd">rendered, scored, fixed</text>
+  <text x="1008" y="309" font-size="18" font-weight="700" fill="#eafff4" class="mono">SSIM 0.983 pass</text>
+</g>
+</svg>

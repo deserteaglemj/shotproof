@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing</title>
+<style>
+  :root {
+    --bg: #0f1222;
+    --card: #171b31;
+    --card-hi: #1a1f3d;
+    --border: #262b48;
+    --btn-border: #3a4066;
+    --toggle: #1b1f36;
+    --accent: #5b6cff;
+    --eyebrow: #8f9bff;
+    --text: #e8eaf4;
+    --muted: #a2a8c3;
+    --check: #7ee2a8;
+    /* likely Helvetica Neue / Inter-like neo-grotesque */
+    --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  main { padding: 72px 16px 80px; }
+  .head { text-align: center; }
+  .eyebrow { color: var(--eyebrow); font-size: 12px; font-weight: 700; letter-spacing: 2px; line-height: 16px; }
+  h1 { font-size: 44px; font-weight: 700; letter-spacing: -0.8px; line-height: 52px; margin-top: 16px; }
+  .sub { color: var(--muted); font-size: 18px; line-height: 24px; margin-top: 10px; }
+  .toggle { display: inline-flex; gap: 2px; margin-top: 28px; padding: 4px; background: var(--toggle); border-radius: 999px; }
+  .toggle button { font: inherit; font-size: 14px; color: var(--text); background: none; border: 0; border-radius: 999px; height: 32px; padding: 0 18px; cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: var(--accent); color: #fbfbff; }
+  .grid { display: grid; grid-template-columns: repeat(3, 320px); gap: 24px; justify-content: center; margin-top: 48px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; }
+  .card.hi { background: var(--card-hi); border: 2px solid var(--accent); }
+  .card-top { display: flex; justify-content: space-between; align-items: center; height: 22px; }
+  h2 { font-size: 17px; font-weight: 700; line-height: 22px; }
+  .badge { background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; line-height: 23px; padding: 0 10px; border-radius: 12px; }
+  .price { margin-top: 26px; display: flex; align-items: baseline; gap: 4px; }
+  .price strong { font-size: 48px; font-weight: 700; letter-spacing: -2px; line-height: 48px; }
+  .price span { color: var(--muted); font-size: 15px; font-weight: 500; letter-spacing: -0.3px; }
+  .desc { color: var(--muted); font-size: 14.5px; line-height: 16px; margin-top: 10px; }
+  ul { list-style: none; margin-top: 24px; }
+  li { border-top: 1px solid var(--border); height: 37px; display: flex; align-items: center; gap: 10px; font-size: 14.5px; }
+  li::before { content: "\2713"; color: var(--check); font-weight: 700; width: 11px; }
+  .btn { display: flex; align-items: center; justify-content: center; margin-top: 28px; height: 47px; border-radius: 8px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; border: 1px solid var(--btn-border); background: #131628; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn:hover { filter: brightness(1.12); }
+  .btn:focus-visible, .toggle button:focus-visible { outline: 2px solid var(--eyebrow); outline-offset: 2px; }
+  @media (max-width: 1040px) {
+    .grid { grid-template-columns: minmax(0, 420px); }
+    h1 { font-size: 36px; line-height: 44px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="head">
+    <p class="eyebrow">PRICING</p>
+    <h1>Plans that grow with you</h1>
+    <p class="sub">Start free. Upgrade when your team needs more.</p>
+    <div class="toggle" role="group" aria-label="Billing period">
+      <button type="button" aria-pressed="true">Monthly</button>
+      <button type="button" aria-pressed="false">Yearly (save 20%)</button>
+    </div>
+  </header>
+  <section class="grid" aria-label="Plans">
+    <article class="card">
+      <div class="card-top"><h2>Starter</h2></div>
+      <p class="price"><strong>$0</strong><span>/month</span></p>
+      <p class="desc">For individuals trying things out.</p>
+      <ul><li>3 projects</li><li>1 GB storage</li><li>Community support</li></ul>
+      <a class="btn" href="#">Get started</a>
+    </article>
+    <article class="card hi">
+      <div class="card-top"><h2>Team</h2><span class="badge">Most popular</span></div>
+      <p class="price"><strong>$24</strong><span>/month</span></p>
+      <p class="desc">For small teams shipping together.</p>
+      <ul><li>Unlimited projects</li><li>50 GB storage</li><li>Priority support</li></ul>
+      <a class="btn primary" href="#">Start 14-day trial</a>
+    </article>
+    <article class="card">
+      <div class="card-top"><h2>Business</h2></div>
+      <p class="price"><strong>$79</strong><span>/month</span></p>
+      <p class="desc">For organizations with advanced needs.</p>
+      <ul><li>SSO and audit logs</li><li>500 GB storage</li><li>Dedicated manager</li></ul>
+      <a class="btn" href="#">Contact sales</a>
+    </article>
+  </section>
+</main>
+</body>
+</html>

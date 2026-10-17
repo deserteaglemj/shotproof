@@ -1,0 +1,17 @@
+# Local-only notes and machine-specific install evidence
+TODO.md
+PROJECT-BRIEF.md
+proof/
+# Real-site eval artifacts stay local: third-party marks (GOV.UK crown) and real users' posts (Hacker News).
+# Their scores are published as text in evals/RESULTS.md and evals/results.json.
+evals/runs/06-hacker-news/
+evals/runs/07-gov-uk/
+evals/fixtures/screens/06-hacker-news.png
+evals/fixtures/screens/07-gov-uk.png
+assets/gallery/06-hacker-news.jpg
+assets/gallery/07-gov-uk.jpg
+# /brag working files (final video, gif and poster are copied to assets/)
+brag-output*/
+__pycache__/
+*.pyc
+.DS_Store

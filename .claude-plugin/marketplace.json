@@ -1,0 +1,16 @@
+{
+  "name": "quis-screenshot-to-code",
+  "owner": {
+    "name": "Marquis Jackson"
+  },
+  "metadata": {
+    "description": "Local marketplace for the screenshot-to-code plugin, shared by Claude Code and Codex."
+  },
+  "plugins": [
+    {
+      "name": "screenshot-to-code",
+      "source": "./plugins/screenshot-to-code",
+      "description": "Turn screenshots into matching HTML + CSS or React + Tailwind, verified by render-and-compare."
+    }
+  ]
+}

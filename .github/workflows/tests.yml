@@ -1,0 +1,27 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install helper dependencies
+        run: |
+          python -m pip install playwright pillow numpy
+          python -m playwright install --with-deps chromium
+      - name: Check plugin manifests parse
+        run: |
+          python -c "import json; [json.load(open(p)) for p in ['.claude-plugin/marketplace.json','plugins/screenshot-to-code/.claude-plugin/plugin.json','plugins/screenshot-to-code/.codex-plugin/plugin.json']]"
+      - name: Run s2c self-tests
+        run: python -m unittest discover -s plugins/screenshot-to-code/tests -v

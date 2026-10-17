@@ -1,0 +1,9 @@
+[
+  {"id": "01-saas-landing", "source": "fixtures/src/01-saas-landing.html", "width": 1280, "height": 800, "dpr": 1, "kind": "synthetic", "threshold": 0.90},
+  {"id": "02-pricing", "source": "fixtures/src/02-pricing.html", "width": 1280, "height": 900, "dpr": 1, "kind": "synthetic", "threshold": 0.90},
+  {"id": "03-dashboard", "source": "fixtures/src/03-dashboard.html", "width": 1440, "height": 900, "dpr": 1, "kind": "synthetic", "threshold": 0.90},
+  {"id": "04-mobile-login", "source": "fixtures/src/04-mobile-login.html", "width": 390, "height": 844, "dpr": 2, "kind": "synthetic", "threshold": 0.90},
+  {"id": "05-article", "source": "fixtures/src/05-article.html", "width": 1024, "height": 1000, "dpr": 1, "kind": "synthetic", "threshold": 0.90},
+  {"id": "06-hacker-news", "source": "https://news.ycombinator.com/", "width": 1280, "height": 900, "dpr": 1, "kind": "public", "threshold": 0.80},
+  {"id": "07-gov-uk", "source": "https://www.gov.uk/", "width": 1280, "height": 900, "dpr": 1, "kind": "public", "threshold": 0.80}
+]

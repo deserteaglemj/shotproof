@@ -1,0 +1,17 @@
+{
+  "name": "screenshot-to-code",
+  "version": "0.2.0",
+  "description": "Turn screenshots of websites or app screens into faithful HTML + CSS (or React + Tailwind), then render, compare and fix until it matches. Uses the running agent's own vision; includes a locked-down private client-proof mode.",
+  "author": {
+    "name": "Marquis Jackson"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Screenshot to Code",
+    "shortDescription": "Rebuild a screen from a screenshot and verify it visually",
+    "category": "Coding",
+    "defaultPrompt": [
+      "Turn this screenshot into a single HTML file and verify it matches."
+    ]
+  }
+}

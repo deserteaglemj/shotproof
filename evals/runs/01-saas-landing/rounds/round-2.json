@@ -1,0 +1,40 @@
+{
+ "ssim": 0.9551,
+ "pixel_match": 0.9697,
+ "mean_color_delta": 2.72,
+ "band_ssim_top_to_bottom": [
+  0.992,
+  0.9892,
+  0.8486,
+  0.9563,
+  0.9602,
+  0.9959,
+  0.9093,
+  0.9894
+ ],
+ "size_ref": [
+  1280,
+  800
+ ],
+ "size_candidate": [
+  1280,
+  800
+ ],
+ "candidate_resized": false,
+ "console_errors": [],
+ "page_errors": [],
+ "failed_requests": [],
+ "external_requests": [],
+ "viewport_css": [
+  1280,
+  800
+ ],
+ "dpr": 1.0,
+ "threshold": 0.9,
+ "passed": true,
+ "worst_bands": [
+  "band 3/8 (y 200-300px)",
+  "band 7/8 (y 600-700px)",
+  "band 4/8 (y 300-400px)"
+ ]
+}

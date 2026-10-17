@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome back</title>
+<style>
+  :root {
+    --accent: #ff6b3d;
+    --ink: #22201f;
+    --muted: #77706b;
+    --faint: #a39b95;
+    --line: #e4ddd8;
+    --bg-top: #ffe9dc;
+    /* likely Helvetica Neue / SF; system stack of the same class */
+    --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    font-family: var(--font);
+    color: var(--ink);
+    background: linear-gradient(var(--bg-top), #fff 380px) no-repeat, #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { padding: 72px 28px 40px; max-width: 480px; margin: 0 auto; }
+  .logo {
+    width: 64px; height: 64px; border-radius: 16px;
+    background: var(--accent); color: #fff;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 29px; line-height: 1;
+  }
+  h1 { margin: 26px 0 0; font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: -0.5px; }
+  .sub { margin: 7px 0 0; font-size: 16px; line-height: 22px; color: var(--muted); }
+  form { margin-top: 34px; }
+  label { display: block; font-size: 14.3px; line-height: 18px; font-weight: 700; margin: 0 0 7px; }
+  .field + label { margin-top: 20px; }
+  input {
+    display: block; width: 100%; height: 52px;
+    border: 1px solid var(--line); border-radius: 16px; background: #fff;
+    padding: 0 16px; font: 16px/1 var(--font); color: var(--ink);
+  }
+  input::placeholder { color: var(--faint); }
+  input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .forgot-row { text-align: right; margin-top: 13px; }
+  .forgot { color: var(--accent); font-weight: 700; font-size: 14px; line-height: 18px; text-decoration: none; }
+  .btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 54px; border-radius: 14px; cursor: pointer;
+    font: 700 17px/1 var(--font);
+  }
+  .primary { margin-top: 27px; background: var(--ink); color: #fff; border: 0; }
+  .primary:hover { background: #3a3634; }
+  .divider { margin: 25.5px 0 0; text-align: center; font-size: 13px; line-height: 16px; color: var(--faint); }
+  .apple { margin-top: 25px; font-size: 16px; background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .apple:hover { background: #faf7f5; }
+  .btn:focus-visible, .forgot:focus-visible, .create:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .signup { margin: 39px 0 0; text-align: center; font-size: 15px; line-height: 20px; color: var(--muted); }
+  .create { color: var(--ink); font-weight: 700; text-decoration: none; }
+  .forgot:hover, .create:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<main>
+  <div class="logo" role="img" aria-label="P logo">P</div>
+  <h1>Welcome back</h1>
+  <p class="sub">Sign in to keep planning your trips.</p>
+  <form action="#" onsubmit="return false">
+    <label for="email">Email</label>
+    <input class="field" id="email" type="email" placeholder="you@example.com" autocomplete="email">
+    <label for="password">Password</label>
+    <input class="field" id="password" type="password" placeholder="Enter your password" autocomplete="current-password">
+    <div class="forgot-row"><a class="forgot" href="#">Forgot password?</a></div>
+    <button class="btn primary" type="submit">Sign in</button>
+  </form>
+  <p class="divider">or continue with</p>
+  <button class="btn apple" type="button">Continue with Apple</button>
+  <p class="signup">New here? <a class="create" href="#">Create an account</a></p>
+</main>
+</body>
+</html>
