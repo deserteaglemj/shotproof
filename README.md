@@ -5,7 +5,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-5b4ff0"></a>
   <a href="evals/RESULTS.md"><img alt="Evals: 7 of 7 pass" src="https://img.shields.io/badge/evals-7%2F7%20pass-2f8f62"></a>
-  <a href="https://github.com/deserteaglemj/screenshot-to-code-plugin/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/deserteaglemj/screenshot-to-code-plugin/actions/workflows/tests.yml/badge.svg"></a>
+  <a href="https://github.com/deserteaglemj/screenshot-to-code/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/deserteaglemj/screenshot-to-code/actions/workflows/tests.yml/badge.svg"></a>
   <img alt="Works with Claude Code and Codex" src="https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20Codex-1d1d1b">
 </p>
 
@@ -23,14 +23,14 @@ It runs on the model you already use in Claude Code or Codex. There is nothing e
 **Claude Code**
 
 ```text
-/plugin marketplace add deserteaglemj/screenshot-to-code-plugin
+/plugin marketplace add deserteaglemj/screenshot-to-code
 /plugin install screenshot-to-code@quis-screenshot-to-code
 ```
 
 **Codex**
 
 ```bash
-codex plugin marketplace add deserteaglemj/screenshot-to-code-plugin
+codex plugin marketplace add deserteaglemj/screenshot-to-code
 codex plugin add screenshot-to-code@quis-screenshot-to-code
 ```
 
