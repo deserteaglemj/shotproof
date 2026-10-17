@@ -17,7 +17,7 @@ for p in python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do $p -c 'imp
 
 ## 1. Intake
 
-1. Open every screenshot. Note pixel size. Mac screenshots are usually 2x: if text looks normal size at half the pixel width, use `--dpr 2` everywhere below. The CSS viewport is pixel size divided by dpr.
+1. Open every screenshot. If it includes a browser toolbar, OS menu bar or phone frame, crop that out first (`PY S2C crop`) and use the cropped file from here on, verify included. Note pixel size. Mac screenshots are usually 2x: if text looks normal size at half the pixel width, use `--dpr 2` everywhere below. The CSS viewport is pixel size divided by dpr.
 2. Pick the mode:
    - **HTML** (default): one `index.html` with an inline `<style>`, no build step, no framework, no CDN. Use it unless one of the next two applies.
    - **React + Tailwind**: the user asks for it, or the target project already has React (check `package.json`). Write components into that project, follow its conventions and existing components, and verify against its local dev server URL (127.0.0.1 or localhost only). When the project has its own frontend skill or rules, follow them too.
@@ -35,7 +35,7 @@ Do this before writing code, and write the inventory down in your working notes:
 - **Type**: for each text style estimate font size from cap or x-height in pixels divided by dpr, weight, line-height, letter-spacing, and family class (geometric sans, humanist sans, serif, mono). Use a system stack that matches the class; name the likely real font in a comment.
 - **Spacing and grid**: container width, column count, gutters, section padding, gaps between repeated items. Measure in pixels, convert to CSS px. Look for a spacing step (4 or 8) and use it.
 - **Components**: buttons (height, radius, padding, border), inputs, cards, badges, icons, dividers, shadows. Note which are repeated so they become one class.
-- **Media**: logos, photos, illustrations, icons. Decide per item: CSS (simple shapes, gradients), inline SVG (simple icons and logos you can draw cleanly), or a crop of the screenshot (`PY S2C crop shot.png --box x,y,w,h --out assets/name.png`) for photos and complex logos. Never hotlink images from the live site. Crops at 2x should be shown at half size.
+- **Media**: logos, photos, illustrations, icons. Decide per item: CSS (simple shapes, gradients), inline SVG (simple icons and logos you can draw cleanly), or a crop of the screenshot (`PY S2C crop shot.png --box x,y,w,h --out assets/name.png`) for photos and complex logos. Never hotlink images from the live site. Crops at 2x should be shown at half size. Crop only the real image itself, never a whole section or the whole screenshot: verify fails any page where one image covers more than a quarter of it (raise `--max-image-ratio` only for a genuine full-bleed photo, and say so in the report).
 
 ## 3. Build
 
@@ -43,7 +43,7 @@ Do this before writing code, and write the inventory down in your working notes:
 - CSS custom properties for the sampled colors, font stacks and spacing step at the top of the stylesheet. Flexbox and grid for layout. No absolute positioning of whole sections and no fixed pixel heights on text containers; those break the moment text wraps.
 - Build section by section in the inventory order, matching each one before polishing the next.
 - Real text, never pictures of text. Real buttons and links with hover and visible `:focus-visible` states even though the screenshot cannot show them.
-- Responsive: match the screenshot exactly at its own viewport, and make the layout reflow sensibly at 375px wide (stack columns, wrap nav) without horizontal scroll.
+- Responsive: match the screenshot exactly at its own viewport, and make the layout reflow sensibly at 375px wide (stack columns, wrap nav) without horizontal scroll. Verify renders that width too and fails on sideways scroll.
 - No external requests in HTML mode: no CDN, no web fonts, no remote images. That keeps the file portable and the render deterministic.
 
 ### Quality bar
@@ -73,15 +73,22 @@ It renders the page at the screenshot's viewport with Chromium, then writes `ren
 - `band_shift_px`: per band, how many pixels your content sits lower (positive) or higher (negative) than the screenshot. A run of equal non-zero shifts means something above that band is too tall or short; fix the first band where the shift appears.
 - `pixel_match`, `mean_color_delta`
 - `console_errors`, `page_errors`, `failed_requests`, `external_requests`
-- `passed`: ssim at or above `--threshold` (default 0.90) and no console, page or request errors
+- `page_stats`: `largest_image_area_ratio`, `image_area_ratio_total`, `visible_text_chars`, `horizontal_overflow_px`
+- `blank_render`: true when the render is a flat color or has no text
+- `mobile`: the same page at 375px wide (`render-375.png`, `horizontal_overflow_px`, errors); skipped when the screenshot is already that narrow
+- `failures`: every reason it did not pass, in words
+- `passed`: ssim at or above `--threshold` (default 0.90), no console, page or request errors, not blank, no image over a quarter of the page, no sideways scroll at 375px
+- `page-snapshot.html`: a copy of the page as it was this round
 
 Then:
 
-1. Look at `side-by-side.png` and `diff.png` yourself. The numbers say where; your eyes say what.
+1. Look at `side-by-side.png`, `diff.png` and `render-375.png` yourself. The numbers say where; your eyes say what.
 2. Fix the worst band first. Typical causes, in order: wrong section height or padding, wrong font size or line-height (text wraps differently and shifts everything below), wrong container width, wrong colors, missing element.
-3. Re-run verify into `round-2`, `round-3`... Keep every round's `verify.json`.
-4. Stop when `passed` is true and another round would not visibly improve anything, or after **5 rounds**, whichever comes first. Do not tune numbers blindly to chase the score; every change should make the side-by-side look more like the source.
-5. Fix every console error and failed request regardless of score.
+3. After round 1, change only the code for the band you are fixing, with targeted edits. Never rewrite the whole file: a rewrite re-rolls bands that already matched.
+4. Re-run verify into `round-2`, `round-3`... Keep every round's `verify.json`.
+5. Keep the best round, not the last one. If a round scores lower than the best so far, copy that best round's `page-snapshot.html` back over the page before trying something else. The final page is the highest-scoring round that passed (or the highest-scoring one if none passed); report which round it was.
+6. Stop when `passed` is true and another round would not visibly improve anything, or after **5 rounds**, whichever comes first. Do not tune numbers blindly to chase the score; every change should make the side-by-side look more like the source.
+7. Fix every item in `failures` regardless of score.
 
 Scores to expect: a clean UI screenshot rebuilt well lands at 0.90 to 0.97. Photos replaced by crops still score high; photos replaced by placeholders, dense text in a different font, or anti-aliasing differences cap the score lower. Below 0.80 after the loop means something structural is still wrong.
 
@@ -90,7 +97,7 @@ Scores to expect: a clean UI screenshot rebuilt well lands at 0.90 to 0.97. Phot
 Finish with a short report:
 
 - Files written (paths) and the mode used.
-- Score table: round 1 ssim and final ssim, plus pass or fail at the threshold.
+- Score table: round 1 ssim, best ssim and which round it was, plus pass or fail at the threshold and the 375px result.
 - Gaps that remain and why (unreadable text, unknown font, photo placeholders, interactive states the screenshot does not show).
 - Anything the user must decide (real images or copy to swap in, fonts to license).
 

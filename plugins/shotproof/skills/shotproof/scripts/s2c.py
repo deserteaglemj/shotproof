@@ -6,6 +6,7 @@ No model calls, no network except what a page you render asks for.
 
   s2c.py render  PAGE --out shot.png --width 1280 --height 800 [--dpr 1]
   s2c.py verify  REF.png PAGE --out-dir DIR [--dpr 1] [--offline] [--threshold 0.9]
+                 [--max-image-ratio 0.25] [--mobile-width 375]
   s2c.py crop    REF.png --box x,y,w,h --out assets/logo.png
   s2c.py palette REF.png [--at 10,20 300,40]
   s2c.py proof-check page.html
@@ -42,9 +43,32 @@ def page_url(page: str) -> str:
     return path.as_uri()
 
 
+# Page facts measured in the browser: overflow, visible text, and how much of the scored area
+# (width x height CSS px from the top) is covered by raster media, so a pasted screenshot cannot win the score.
+PAGE_STATS_JS = """([W, H]) => {
+  const de = document.documentElement, boxes = [];
+  const media = 'img, picture, video, canvas, svg image, input[type=image], object, embed';
+  for (const el of document.querySelectorAll('*')) {
+    const bg = [getComputedStyle(el).backgroundImage, getComputedStyle(el, '::before').backgroundImage,
+                getComputedStyle(el, '::after').backgroundImage].some(b => b && b.includes('url('));
+    if (!el.matches(media) && !bg) continue;
+    const r = el.getBoundingClientRect();
+    const x0 = Math.max(0, r.left + scrollX), y0 = Math.max(0, r.top + scrollY);
+    const x1 = Math.min(W, r.right + scrollX), y1 = Math.min(H, r.bottom + scrollY);
+    if (x1 > x0 && y1 > y0) boxes.push((x1 - x0) * (y1 - y0) / (W * H));
+  }
+  return {
+    horizontal_overflow_px: Math.max(0, de.scrollWidth - de.clientWidth),
+    visible_text_chars: (document.body ? document.body.innerText : '').replace(/\\s+/g, '').length,
+    largest_image_area_ratio: +Math.max(0, ...boxes).toFixed(3),
+    image_area_ratio_total: +Math.min(1, boxes.reduce((a, b) => a + b, 0)).toFixed(3),
+  };
+}"""
+
+
 def render(page: str, out: Path, width: int, height: int, dpr: float = 1.0,
-           offline: bool = False, viewport_height: int | None = None) -> dict:
-    """Screenshot PAGE at a CSS viewport of width x height. Returns console/network findings."""
+           offline: bool = False, viewport_height: int | None = None, full_page: bool = False) -> dict:
+    """Screenshot PAGE at a CSS viewport of width x height. Returns console/network findings and page stats."""
     from playwright.sync_api import sync_playwright
 
     url = page_url(page)
@@ -80,11 +104,12 @@ def render(page: str, out: Path, width: int, height: int, dpr: float = 1.0,
             pass
         pg.evaluate("document.fonts ? document.fonts.ready.then(() => true) : true")
         pg.wait_for_timeout(300)
+        findings["page_stats"] = pg.evaluate(PAGE_STATS_JS, [width, height])
         out.parent.mkdir(parents=True, exist_ok=True)
         if viewport_height and viewport_height != height:
             pg.screenshot(path=str(out), full_page=True, clip={"x": 0, "y": 0, "width": width, "height": height})
         else:
-            pg.screenshot(path=str(out))
+            pg.screenshot(path=str(out), full_page=full_page)
         browser.close()
     if offline:
         # aborted external requests also show up as failed; keep one list
@@ -243,6 +268,7 @@ def cmd_verify(args) -> int:
     width, height = round(w_px / args.dpr), round(h_px / args.dpr)
     shot = out_dir / "render.png"
     findings = render(args.page, shot, width, height, args.dpr, args.offline, args.viewport_height)
+    stats = findings["page_stats"]
     result = compare(ref, shot)
     write_visuals(result, out_dir)
     report = {k: v for k, v in result.items() if not k.startswith("_")}
@@ -250,11 +276,33 @@ def cmd_verify(args) -> int:
     report["viewport_css"] = [width, args.viewport_height or height]
     report["dpr"] = args.dpr
     report["threshold"] = args.threshold
-    clean = not (findings["console_errors"] or findings["page_errors"] or findings["failed_requests"])
-    report["passed"] = bool(report["ssim"] >= args.threshold and clean)
+    failures = []
+    if report["ssim"] < args.threshold:
+        failures.append(f"ssim {report['ssim']} below {args.threshold}")
+    if findings["console_errors"] or findings["page_errors"] or findings["failed_requests"]:
+        failures.append("console, page or request errors")
+    # a blank page or one with no text is a failed build, whatever it scores against a sparse screenshot
+    report["blank_render"] = bool(np.asarray(result["_cand"].convert("L"), dtype=np.float64).std() < 2.0
+                                  or stats["visible_text_chars"] == 0)
+    if report["blank_render"]:
+        failures.append("blank render (no visible content or no text)")
+    if stats["largest_image_area_ratio"] > args.max_image_ratio:
+        failures.append(f"one image covers {stats['largest_image_area_ratio']:.0%} of the page "
+                        f"(limit {args.max_image_ratio:.0%}); rebuild it as HTML instead of pasting the screenshot")
+    if args.mobile_width and width > args.mobile_width:
+        mshot = out_dir / f"render-{args.mobile_width}.png"
+        m = render(args.page, mshot, args.mobile_width, 812, 1.0, args.offline, full_page=True)
+        report["mobile"] = {"width": args.mobile_width, **m["page_stats"],
+                            "errors": m["console_errors"] + m["page_errors"] + m["failed_requests"]}
+        if m["page_stats"]["horizontal_overflow_px"] > 0:
+            failures.append(f"page scrolls sideways by {m['page_stats']['horizontal_overflow_px']}px at {args.mobile_width}px wide")
+    if Path(args.page).is_file():  # snapshot of this round, so the best round can be restored
+        (out_dir / "page-snapshot.html").write_bytes(Path(args.page).read_bytes())
+    report["failures"] = failures
+    report["passed"] = not failures
     worst = sorted(range(len(report["band_ssim_top_to_bottom"])), key=lambda i: report["band_ssim_top_to_bottom"][i])[:3]
     report["worst_bands"] = [f"band {i + 1}/{len(report['band_ssim_top_to_bottom'])} (y {i * h_px // 8}-{(i + 1) * h_px // 8}px)" for i in worst]
-    report["files"] = {n: str(out_dir / n) for n in ("render.png", "side-by-side.png", "diff.png")}
+    report["files"] = {p.name: str(p) for p in sorted(out_dir.iterdir()) if p.suffix in (".png", ".html")}
     (out_dir / "verify.json").write_text(json.dumps(report, indent=1))
     print(json.dumps(report, indent=1))
     return 0 if report["passed"] else 1
@@ -318,6 +366,10 @@ def main(argv=None) -> int:
     v.add_argument("--viewport-height", type=int, help="CSS viewport height when REF is a tall full-page capture")
     v.add_argument("--threshold", type=float, default=0.90, help="SSIM needed to pass (default 0.90)")
     v.add_argument("--offline", action="store_true", help="block every non-local request")
+    v.add_argument("--max-image-ratio", type=float, default=0.25,
+                   help="fail if one image covers more than this share of the page (default 0.25; raise for a real full-bleed photo)")
+    v.add_argument("--mobile-width", type=int, default=375,
+                   help="also render at this CSS width and fail on sideways scroll (0 to skip; skipped when REF is this narrow)")
     v.set_defaults(fn=cmd_verify)
 
     c = sub.add_parser("crop", help="cut a region (logo, photo) out of REF as a local asset")

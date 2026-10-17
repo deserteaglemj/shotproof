@@ -22,7 +22,7 @@ For cases 01 to 05: `runs/<case>/index.html` (the built page), `runs/<case>/asse
 
 - Fonts: every agent fell back to a system stack of the right class; heading bands score lowest for that reason.
 - Interactive states (hover, focus, menus) cannot be seen in a screenshot, so they are the agent's choice.
-- The 375px reflow was written in every case but only measured in one (no horizontal scroll); it is not scored.
+- The 375px reflow has no reference screenshot, so it gets a hard check instead of a score. Re-checked with 0.3.0's `verify` (2026-10-17): all 7 final pages have 0px sideways scroll at 375px, no image covering more than 3% of the page, and no blank render, so all 7 still pass the stricter check.
 - No React + Tailwind case yet (listed in TODO).
 - Public-site screenshots are a snapshot taken read-only on 2026-10-17; the live sites will drift.
 

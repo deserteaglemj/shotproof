@@ -77,7 +77,7 @@ Those are the real scores from the mobile-login eval case. The bar is SSIM, a st
 1. **Read like a builder.** Sections with pixel ranges, every word copied exactly, colors sampled from real pixels (not guessed), type sizes measured from glyph heights, spacing grid, components, images.
 2. **Build section by section.** Semantic HTML, CSS variables for the sampled palette, flexbox and grid, real text, visible focus states, a sensible phone layout.
 3. **Render and compare.** `s2c.py verify` screenshots the page with Chromium and writes a side-by-side image, a red diff heatmap, the overall score, a score for each of 8 horizontal bands, and how many pixels each band is shifted up or down.
-4. **Fix the worst band first**, re-check, and stop at the pass line or after 5 rounds. Console errors and failed requests fail the check no matter how good the score looks.
+4. **Fix the worst band first** with targeted edits (never a full rewrite), re-check, keep the best round, and stop at the pass line or after 5 rounds. Console errors, failed requests, a blank page, one image covering over a quarter of the page (a pasted screenshot) or sideways scroll at 375px wide fail the check no matter how good the score looks.
 5. **Report honestly**: files written, first and final score, and the gaps it could not close.
 
 ## The proof
@@ -116,11 +116,12 @@ The two real-site cases (Hacker News, and GOV.UK rebuilt in private proof mode) 
 | --- | --- | --- | --- |
 | Where it runs | Inside Claude Code or Codex | Its own web app (React + FastAPI) | Inside your agent |
 | Model and keys | Your agent's own model, no extra key | Bring an OpenAI, Anthropic or Gemini API key | Your agent's own model |
-| Checks its own output | Renders, scores (SSIM per band) and fixes in a loop | Previews the result | Only if you ask, and with no score |
-| Output | HTML + CSS, or React + Tailwind in your repo | Many stacks, plus video input | Whatever it decides |
-| Published evals | 7 cases, scored independently | 16-screenshot eval set with a rating UI | None |
+| Checks its own output | Renders at the screenshot's own size and dpr, scores it (SSIM overall and per band), and fixes the worst band for up to 5 rounds against a fixed pass line | Renders desktop (1280x832) and mobile (342x684) previews for the model to look at; no score, diff or pass line | Only if you ask, and with no score |
+| Fails the check on | Low score, console or request errors, a blank page, a pasted screenshot, sideways scroll at 375px | Nothing automatic | Nothing |
+| Output | HTML + CSS with no CDN or web fonts, or React + Tailwind in your repo | Six stacks (Tailwind, Bootstrap, Vue, Ionic and more), video input, AI image generation | Whatever it decides |
+| Published evals | 7 cases, scored by script, results in the repo | 16-screenshot set (not published), rated by hand, plus pairwise voting | None |
 
-abi/screenshot-to-code is a great standalone app with more stacks and models. This plugin is for people who already work in an agent and want the result checked, measured and fixed without leaving it.
+abi/screenshot-to-code is a great standalone app: more stacks, video input, real asset extraction and image generation, and a full web UI with variants and select-and-edit. shotproof is for people who already work in an agent and want the result rendered, measured and fixed without leaving it, with no key and no extra cost.
 
 ## The helper script
 
@@ -128,13 +129,13 @@ abi/screenshot-to-code is a great standalone app with more stacks and models. Th
 
 | Command | Does |
 | --- | --- |
-| `verify REF.png PAGE --out-dir DIR [--dpr 2] [--offline] [--threshold 0.9]` | Render PAGE at REF's size, score it, write visuals. Exits 0 only on a pass with no errors. |
+| `verify REF.png PAGE --out-dir DIR [--dpr 2] [--offline] [--threshold 0.9]` | Render PAGE at REF's size and at 375px, score it, write visuals and a snapshot of the page. Exits 0 only on a pass with no errors. |
 | `render PAGE --out x.png --width W --height H [--dpr 2]` | Screenshot a local file or localhost URL |
 | `palette REF.png [--at x,y ...]` | Dominant colors, plus exact pixel samples |
 | `crop REF.png --box x,y,w,h --out assets/logo.png` | Cut a logo or photo out of the screenshot |
 | `proof-check page.html` | Check the private client-proof rules |
 
-Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift detection, palette, every proof rule, and a real end-to-end render).
+Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift detection, palette, every proof rule, the blank, pasted-screenshot and 375px checks, and a real end-to-end render).
 
 ## FAQ
 

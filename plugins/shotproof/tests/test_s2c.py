@@ -109,6 +109,45 @@ class EndToEnd(unittest.TestCase):
             self.assertEqual(out.returncode, 1)
             self.assertIn("boom", json.loads(out.stdout)["console_errors"][0])
 
+    def _verify_self(self, d: Path, body: str, cand: str | None = None) -> dict:
+        """Render BODY at 600x300 as the reference, then verify BODY (or CAND) against it."""
+        page = d / "p.html"
+        page.write_text(body)
+        ref = d / "ref.png"
+        s2c.render(str(page), ref, 600, 300)
+        target = page
+        if cand is not None:
+            target = d / "cand.html"
+            target.write_text(cand)
+        out = subprocess.run([sys.executable, str(SCRIPT), "verify", str(ref), str(target),
+                              "--out-dir", str(d / "v")], capture_output=True, text=True)
+        return {"code": out.returncode, **json.loads(out.stdout)}
+
+    def test_pasted_screenshot_fails_even_with_perfect_score(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = self._verify_self(Path(d), "<!doctype html><body style='margin:0;font:20px sans-serif'>"
+                                  "<h1 style='padding:40px'>Hello</h1><p>Body copy</p></body>",
+                                  cand="<!doctype html><body style='margin:0'><p style='position:absolute;"
+                                  "opacity:0'>x</p><img src='ref.png' style='display:block'></body>")
+            self.assertEqual(r["code"], 1)
+            self.assertGreater(r["page_stats"]["largest_image_area_ratio"], 0.9)
+            self.assertTrue(any("image covers" in f for f in r["failures"]))
+
+    def test_blank_render_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = self._verify_self(Path(d), "<!doctype html><body style='background:#fff'></body>")
+            self.assertEqual(r["code"], 1)
+            self.assertTrue(r["blank_render"])
+
+    def test_sideways_scroll_at_375_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = self._verify_self(Path(d), "<!doctype html><body style='margin:0;font:20px sans-serif'>"
+                                  "<div style='width:600px'>Fixed width text</div></body>")
+            self.assertEqual(r["code"], 1)
+            self.assertGreater(r["mobile"]["horizontal_overflow_px"], 0)
+            self.assertTrue((Path(d) / "v/render-375.png").is_file())
+            self.assertTrue((Path(d) / "v/page-snapshot.html").is_file())
+
 
 if __name__ == "__main__":
     unittest.main()

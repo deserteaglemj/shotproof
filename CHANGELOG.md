@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 (2026-10-17)
+
+- `verify` fails a blank render (flat color or no text), a page where one image covers more than a quarter of it (`--max-image-ratio`, so pasting the screenshot cannot win the score), and sideways scroll at 375px wide (`--mobile-width`, writes `render-375.png`).
+- `verify` reports `page_stats`, `mobile` and a plain-words `failures` list, and saves `page-snapshot.html` each round.
+- Skill: crop browser chrome and device frames off the screenshot first; after round 1 make targeted edits only; keep the best-scoring round, not the last.
+- README comparison corrected: abi/screenshot-to-code does render desktop and mobile previews for its model, with no score or pass line.
+- All 7 eval pages re-checked under the new rules and still pass.
+
 ## 0.3.0 (2026-10-17)
 
 - Renamed to **shotproof** so it is not confused with abi/screenshot-to-code. The plugin, skill, slash command (`/shotproof`) and marketplace are all `shotproof` now; install with `shotproof@shotproof`. The helper script is still `s2c.py`.
