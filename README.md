@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="screenshot-to-code: turns a screenshot into code, then proves it matches" width="100%">
+  <img src="assets/hero.svg" alt="shotproof: turns a screenshot into code, then proves it matches" width="100%">
 </p>
 
 <p align="center">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-5b4ff0"></a>
   <a href="evals/RESULTS.md"><img alt="Evals: 7 of 7 pass" src="https://img.shields.io/badge/evals-7%2F7%20pass-2f8f62"></a>
-  <a href="https://github.com/deserteaglemj/screenshot-to-code/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/deserteaglemj/screenshot-to-code/actions/workflows/tests.yml/badge.svg"></a>
+  <a href="https://github.com/deserteaglemj/shotproof/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/deserteaglemj/shotproof/actions/workflows/tests.yml/badge.svg"></a>
   <img alt="Works with Claude Code and Codex" src="https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20Codex-1d1d1b">
 </p>
 
@@ -23,15 +23,15 @@ It runs on the model you already use in Claude Code or Codex. There is nothing e
 **Claude Code**
 
 ```text
-/plugin marketplace add deserteaglemj/screenshot-to-code
-/plugin install screenshot-to-code@quis-screenshot-to-code
+/plugin marketplace add deserteaglemj/shotproof
+/plugin install shotproof@shotproof
 ```
 
 **Codex**
 
 ```bash
-codex plugin marketplace add deserteaglemj/screenshot-to-code
-codex plugin add screenshot-to-code@quis-screenshot-to-code
+codex plugin marketplace add deserteaglemj/shotproof
+codex plugin add shotproof@shotproof
 ```
 
 **One-time helper setup** (the checker uses Playwright, Pillow and numpy; skip if you have them):
@@ -43,9 +43,9 @@ python3 -m pip install playwright pillow numpy && python3 -m playwright install 
 Then:
 
 ```text
-/screenshot-to-code ~/Desktop/landing.png
-/screenshot-to-code ~/Desktop/app.png react
-/screenshot-to-code ~/Desktop/prospect.png proof acme-plumbing
+/shotproof ~/Desktop/landing.png
+/shotproof ~/Desktop/app.png react
+/shotproof ~/Desktop/prospect.png proof acme-plumbing
 ```
 
 Or just say "turn this screenshot into code". Codex picks the skill up the same way.
@@ -57,7 +57,7 @@ Or just say "turn this screenshot into code". Codex picks the skill up the same 
   │  shot.png   │ ──▶ │  index.html  │ ──▶ │  render.png   │ ──▶  score, fix, repeat
   └─────────────┘     └──────────────┘     └───────────────┘
 
-  $ /screenshot-to-code login.png          390 x 844 CSS px, dpr 2 (detected)
+  $ /shotproof login.png          390 x 844 CSS px, dpr 2 (detected)
 
   round 1   ████████████████░░░░   0.824   worst: band 5/8 (y 844-1055px)
   round 2   █████████████████░░░   0.849   worst: band 5/8 (y 844-1055px)
@@ -112,7 +112,7 @@ The two real-site cases (Hacker News, and GOV.UK rebuilt in private proof mode) 
 
 ## How it compares
 
-| | screenshot-to-code (this plugin) | [abi/screenshot-to-code](https://github.com/abi/screenshot-to-code) | Asking your agent with no plugin |
+| | shotproof (this plugin) | [abi/screenshot-to-code](https://github.com/abi/screenshot-to-code) | Asking your agent with no plugin |
 | --- | --- | --- | --- |
 | Where it runs | Inside Claude Code or Codex | Its own web app (React + FastAPI) | Inside your agent |
 | Model and keys | Your agent's own model, no extra key | Bring an OpenAI, Anthropic or Gemini API key | Your agent's own model |
@@ -134,7 +134,7 @@ abi/screenshot-to-code is a great standalone app with more stacks and models. Th
 | `crop REF.png --box x,y,w,h --out assets/logo.png` | Cut a logo or photo out of the screenshot |
 | `proof-check page.html` | Check the private client-proof rules |
 
-Tests: `python3 -m unittest discover -s plugins/screenshot-to-code/tests` (scoring, shift detection, palette, every proof rule, and a real end-to-end render).
+Tests: `python3 -m unittest discover -s plugins/shotproof/tests` (scoring, shift detection, palette, every proof rule, and a real end-to-end render).
 
 ## FAQ
 

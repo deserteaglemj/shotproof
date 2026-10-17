@@ -1,4 +1,4 @@
-"""Self-checks for s2c.py. Run: python3 -m unittest discover -s plugins/screenshot-to-code/tests"""
+"""Self-checks for s2c.py. Run: python3 -m unittest discover -s plugins/shotproof/tests"""
 
 import json
 import subprocess
@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parents[1] / "skills/screenshot-to-code/scripts/s2c.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "skills/shotproof/scripts/s2c.py"
 sys.path.insert(0, str(SCRIPT.parent))
 import s2c  # noqa: E402
 

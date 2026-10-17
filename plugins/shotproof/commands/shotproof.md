@@ -3,7 +3,7 @@ description: Turn a screenshot of a website or app screen into matching code, th
 argument-hint: <screenshot path(s)> [react] [proof <slug>] [out <folder>]
 ---
 
-Use the `screenshot-to-code` skill from this plugin and follow it end to end, including the verify-and-fix loop and the final report with scores.
+Use the `shotproof` skill from this plugin and follow it end to end, including the verify-and-fix loop and the final report with scores.
 
 Request: $ARGUMENTS
 

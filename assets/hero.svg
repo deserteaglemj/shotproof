@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="1280" height="420" role="img" aria-labelledby="t d">
-<title id="t">screenshot-to-code</title>
+<title id="t">shotproof</title>
 <desc id="d">A screenshot becomes code, the code is rendered and scored against the screenshot, and the result passes at SSIM 0.983.</desc>
 <defs>
   <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -28,12 +28,12 @@
 
 <!-- copy -->
 <text x="64" y="132" font-size="15" font-weight="600" fill="#8a80ff" letter-spacing="2.5">CLAUDE CODE + CODEX PLUGIN</text>
-<text x="62" y="196" font-size="54" font-weight="800" fill="#f4f3ff" letter-spacing="-1.5">screenshot-to-code</text>
+<text x="62" y="196" font-size="54" font-weight="800" fill="#f4f3ff" letter-spacing="-1.5">shotproof</text>
 <text x="64" y="244" font-size="24" fill="#c9c6e8">Turns a screenshot into code,</text>
 <text x="64" y="276" font-size="24" fill="#c9c6e8">then proves it matches.</text>
 <g transform="translate(64 314)">
   <rect width="168" height="36" rx="18" fill="#1f1c3d" stroke="#3a3570"/>
-  <text x="84" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle" class="mono">/screenshot-to-code</text>
+  <text x="84" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle" class="mono">/shotproof</text>
   <rect x="180" width="150" height="36" rx="18" fill="#1f1c3d" stroke="#3a3570"/>
   <text x="255" y="23" font-size="14" fill="#e6e3ff" text-anchor="middle">7 of 7 evals pass</text>
 </g>

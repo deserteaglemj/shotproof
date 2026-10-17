@@ -1,9 +1,9 @@
 ---
-name: screenshot-to-code
+name: shotproof
 description: Turn one or more screenshots of a website or app screen into faithful, production-quality code, then check the result visually against the screenshot and fix it until it matches. Default output is one self-contained HTML + CSS file; React + Tailwind when the user asks or the target project already uses it; a locked-down private client proof (noindex, no scripts, no remote URLs, preview on 127.0.0.1 only) for agency outreach and redesign pitches. Uses the running agent's own vision, no local model and no API keys. Use for "turn this screenshot into code", "rebuild this page from the image", "clone this screen", "make an HTML version of this site", or "make a private proof from this screenshot".
 ---
 
-# Screenshot to code
+# shotproof
 
 You read the screenshot with your own vision, write the code, render it, compare it with the screenshot, and fix what differs. The compare step is not optional: a build that was never rendered and compared is not done.
 

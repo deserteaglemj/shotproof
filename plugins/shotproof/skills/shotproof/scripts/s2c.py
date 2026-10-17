@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""screenshot-to-code helper: render, compare, crop and private-proof checks.
+"""shotproof helper: render, compare, crop and private-proof checks.
 
 Uses only what is already on the Mac: Python Playwright (Chromium), Pillow and numpy.
 No model calls, no network except what a page you render asks for.

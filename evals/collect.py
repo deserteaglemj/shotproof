@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 EVALS = Path(__file__).resolve().parent
-S2C = EVALS.parent / "plugins/screenshot-to-code/skills/screenshot-to-code/scripts/s2c.py"
+S2C = EVALS.parent / "plugins/shotproof/skills/shotproof/scripts/s2c.py"
 
 
 def main(work_root: str) -> int:

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 (2026-10-17)
+
+- Renamed to **shotproof** so it is not confused with abi/screenshot-to-code. The plugin, skill, slash command (`/shotproof`) and marketplace are all `shotproof` now; install with `shotproof@shotproof`. The helper script is still `s2c.py`.
+
 ## 0.2.0 (2026-10-17)
 
 Public release.

@@ -22,6 +22,6 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Check plugin manifests parse
         run: |
-          python -c "import json; [json.load(open(p)) for p in ['.claude-plugin/marketplace.json','plugins/screenshot-to-code/.claude-plugin/plugin.json','plugins/screenshot-to-code/.codex-plugin/plugin.json']]"
+          python -c "import json; [json.load(open(p)) for p in ['.claude-plugin/marketplace.json','plugins/shotproof/.claude-plugin/plugin.json','plugins/shotproof/.codex-plugin/plugin.json']]"
       - name: Run s2c self-tests
-        run: python -m unittest discover -s plugins/screenshot-to-code/tests -v
+        run: python -m unittest discover -s plugins/shotproof/tests -v
